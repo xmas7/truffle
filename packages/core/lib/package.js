@@ -3,11 +3,11 @@ const TruffleError = require("@truffle/error");
 const Networks = require("./networks");
 const EthPM = require("ethpm");
 const EthPMRegistry = require("ethpm-registry");
-const Web3 = require("web3");
 const { createInterfaceAdapter } = require("@truffle/interface-adapter");
 const path = require("path");
 const fs = require("fs");
 const OS = require("os");
+const StreamingWeb3HttpProvider = require("stream-provider");
 
 const Package = {
   install: async function(options, callback) {
@@ -22,7 +22,7 @@ const Package = {
 
     const provider =
       options.ethpm.provider ||
-      new Web3.providers.HttpProvider(options.ethpm.install_provider_uri, {
+      new StreamingWeb3HttpProvider(options.ethpm.install_provider_uri, {
         keepAlive: false
       });
     let host = options.ethpm.ipfs_host;

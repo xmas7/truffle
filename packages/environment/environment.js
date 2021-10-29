@@ -6,6 +6,7 @@ const Resolver = require("@truffle/resolver");
 const Artifactor = require("@truffle/artifactor");
 const Ganache = require("ganache-core/public-exports");
 const Provider = require("@truffle/provider");
+const StreamingWeb3HttpProvider = require("stream-provider");
 
 const Environment = {
   // It's important config is a Config object and not a vanilla object
@@ -73,7 +74,7 @@ const Environment = {
     config.networks[network] = {
       network_id: ganacheOptions.network_id,
       provider: function () {
-        return new Web3.providers.HttpProvider(url, { keepAlive: false });
+        return new StreamingWeb3HttpProvider(url, { keepAlive: false });
       }
     };
 
