@@ -7,7 +7,7 @@ const { createInterfaceAdapter } = require("@truffle/interface-adapter");
 const path = require("path");
 const fs = require("fs");
 const OS = require("os");
-const StreamingWeb3HttpProvider = require("@truffle/stream-provider");
+const StreamingWeb3HttpProvider = require("@truffle/stream-provider").default;
 
 const Package = {
   install: async function(options, callback) {
