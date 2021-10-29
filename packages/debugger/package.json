@@ -24,7 +24,6 @@
     "test:debug": "NODE_ENV=testing node --inspect ./node_modules/.bin/mocha-webpack --webpack-config webpack/webpack.config-test.js --recursive"
   },
   "dependencies": {
-    "JSONStream": "1.3.5",
     "@truffle/abi-utils": "^0.2.4",
     "@truffle/codec": "^0.11.17",
     "@truffle/source-map-utils": "^1.3.61",
