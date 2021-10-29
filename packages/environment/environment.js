@@ -6,7 +6,7 @@ const Resolver = require("@truffle/resolver");
 const Artifactor = require("@truffle/artifactor");
 const Ganache = require("ganache-core/public-exports");
 const Provider = require("@truffle/provider");
-const StreamingWeb3HttpProvider = require("stream-provider");
+const StreamingWeb3HttpProvider = require("@truffle/stream-provider");
 
 const Environment = {
   // It's important config is a Config object and not a vanilla object

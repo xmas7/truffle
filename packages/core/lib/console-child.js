@@ -3,7 +3,7 @@ const TruffleError = require("@truffle/error");
 const Config = require("@truffle/config");
 const Web3 = require("web3");
 const yargs = require("yargs");
-const StreamingWeb3HttpProvider = require("stream-provider");
+const StreamingWeb3HttpProvider = require("@truffle/stream-provider");
 
 const crypto = require("crypto");
 global.crypto = crypto;
