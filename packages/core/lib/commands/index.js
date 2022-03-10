@@ -6,7 +6,6 @@ module.exports = {
   create: require("./create"),
   db: require("./db"),
   debug: require("./debug"),
-  declare: require("./declare"),
   deploy: require("./deploy"),
   develop: require("./develop"),
   exec: require("./exec"),

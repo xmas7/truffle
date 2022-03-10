@@ -43,6 +43,12 @@ module.exports = {
       describe: "Adds extra verbosity to the status of an ongoing migration",
       type: "boolean",
       default: false
+    },
+    "show-plan": {
+      describe:
+        "Visual representation of the migration plan based on declaration file",
+      type: "boolean",
+      default: false
     }
   },
   help: {
@@ -51,7 +57,7 @@ module.exports = {
       "                                " + // spacing to align with previous line
       "[--compile-all] [--compile-none] [--verbose-rpc] [--interactive]\n" +
       "                                " + // spacing to align with previous line
-      "[--skip-dry-run] [--describe-json] [--dry-run]",
+      "[--skip-dry-run] [--describe-json] [--dry-run] [--show-plan]",
     options: [
       {
         option: "--reset",
@@ -102,6 +108,11 @@ module.exports = {
         option: "--describe-json",
         description:
           "Adds extra verbosity to the status of an ongoing migration"
+      },
+      {
+        option: "--show-plan",
+        description:
+          "Provides a visual representation of the deployment plan, based on your declaration file"
       }
     ],
     allowedGlobalOptions: ["network", "config", "quiet"]

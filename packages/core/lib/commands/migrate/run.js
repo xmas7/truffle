@@ -11,8 +11,18 @@ module.exports = async function (options) {
   const prepareConfigForRealMigrations = require("./prepareConfigForRealMigrations");
   const tmp = require("tmp");
   tmp.setGracefulCleanup();
+  const { Solver } = require("@truffle/solver");
 
   const conf = Config.detect(options);
+
+  // if declarative deployments are enabled, run the solver package to kick of migrations
+  if (conf.declarativeDeployment.enabled) {
+    await Solver.Solver.orchestrate(
+      conf.declarativeDeployment.filepath,
+      options
+    );
+  }
+
   if (conf.compileNone || conf["compile-none"]) {
     conf.compiler = "none";
   }
