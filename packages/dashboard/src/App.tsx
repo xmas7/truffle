@@ -2,8 +2,12 @@ import { useEffect } from "react";
 import { MantineProvider, ColorSchemeProvider } from "@mantine/core";
 import type { ColorScheme } from "@mantine/core";
 import { useColorScheme, useLocalStorage } from "@mantine/hooks";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import theme from "src/utils/theme";
 import { EMOTION_KEY, COLOR_SCHEME_KEY } from "src/utils/constants";
+import Layout from "src/components/Layout";
+import Txs from "src/components/Txs";
+import Contracts from "src/components/Contracts";
 import Palette from "src/components/Palette";
 
 function App(): JSX.Element {
@@ -34,7 +38,17 @@ function App(): JSX.Element {
           withGlobalStyles
           withNormalizeCSS
         >
-          <Palette />
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<Layout />}>
+                <Route index element={<Navigate to="/txs" replace />} />
+                <Route path="txs" element={<Txs />} />
+                <Route path="contracts" element={<Contracts />} />
+              </Route>
+              <Route path="colors" element={<Palette />} />
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+          </BrowserRouter>
         </MantineProvider>
       </ColorSchemeProvider>
     </div>
