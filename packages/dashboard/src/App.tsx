@@ -1,10 +1,13 @@
 import { useEffect } from "react";
+import { EMOTION_KEY, COLOR_SCHEME_KEY } from "src/utils/constants";
+// Mantine
 import { MantineProvider, ColorSchemeProvider } from "@mantine/core";
 import type { ColorScheme } from "@mantine/core";
 import { useColorScheme, useLocalStorage } from "@mantine/hooks";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import theme from "src/utils/theme";
-import { EMOTION_KEY, COLOR_SCHEME_KEY } from "src/utils/constants";
+// Router
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+// Components
 import Layout from "src/components/Layout";
 import Txs from "src/components/Txs";
 import Contracts from "src/components/Contracts";
