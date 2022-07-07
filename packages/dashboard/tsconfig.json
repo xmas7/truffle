@@ -10,7 +10,7 @@
       "esnext"
     ],
     "skipLibCheck": true,
-    "target": "es5",
+    "target": "es2021",
     "moduleResolution": "node",
     "downlevelIteration": true,
     "allowSyntheticDefaultImports": true,
