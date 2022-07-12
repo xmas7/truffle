@@ -58,7 +58,9 @@ const commandReference = {
   "g": "turn on generated sources",
   "G": "turn off generated sources except via `;`",
   "y": "(if at end) reset & continue to final error",
-  "Y": "reset & continue to previous error"
+  "Y": "reset & continue to previous error",
+  "z": "load new transaction and disable storage fetching",
+  "Z": "load transaction and enable storage fetching"
 };
 
 const shortCommandReference = {
@@ -86,7 +88,9 @@ const shortCommandReference = {
   "g": "turn on generated sources",
   "G": "turn off generated sources",
   "y": "reset & go to final error",
-  "Y": "reset & go to previous error"
+  "Y": "reset & go to previous error",
+  "z": "load w/o storage fetching",
+  "Z": "load w/storage fetching"
 };
 
 const truffleColors = {
@@ -354,6 +358,8 @@ var DebugUtils = {
       ["l"],
       ["s", "h"],
       ["q", "r", "t", "T"],
+      ["z"],
+      ["Z"],
       ["b"],
       ["B"],
       ["+", "-"],

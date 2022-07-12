@@ -6,7 +6,7 @@ const util = require("util");
 
 const DebugUtils = require("@truffle/debug-utils");
 const selectors = require("@truffle/debugger").selectors;
-const { session, sourcemapping, stacktrace, trace, evm, controller } =
+const { session, data, sourcemapping, stacktrace, trace, evm, controller } =
   selectors;
 
 const analytics = require("../services/analytics");
@@ -363,6 +363,7 @@ class DebugInterpreter {
 
     let alreadyFinished = this.session.view(trace.finishedOrUnloaded);
     let loadFailed = false;
+    let storageRangeAtActivationFailed = false;
 
     // If not finished, perform commands that require state changes
     // (other than quitting or resetting)
@@ -489,18 +490,41 @@ class DebugInterpreter {
         this.printer.print("");
       }
     }
-    if (cmd === "t") {
+    if (cmd === "t" || cmd === "z" || cmd === "Z") {
       if (!this.fetchExternal) {
         if (!this.session.view(session.status.loaded)) {
           const txSpinner = new Spinner(
             "core:debug:interpreter:step",
             DebugUtils.formatTransactionStartMessage()
           );
+          let setStorageVisible;
+          switch (cmd) {
+            case "t":
+              setStorageVisible = this.session.view(
+                data.application.allStorageVisible
+              );
+              break;
+            case "z":
+              setStorageVisible = false;
+              break;
+            case "Z":
+              setStorageVisible = true;
+              break;
+          }
           try {
-            await this.session.load(cmdArgs);
+            if (setStorageVisible) {
+              try {
+                await this.session.load(cmdArgs, { fetchStorage: true });
+              } catch {
+                await this.session.load(cmdArgs);
+                storageRangeAtActivationFailed = true;
+              }
+            } else {
+              await this.session.load(cmdArgs);
+            }
             txSpinner.succeed();
             this.repl.setPrompt(DebugUtils.formatPrompt(this.network, cmdArgs));
-          } catch (_) {
+          } catch {
             txSpinner.fail();
             loadFailed = true;
           }
@@ -521,6 +545,7 @@ class DebugInterpreter {
       if (!this.fetchExternal) {
         if (this.session.view(session.status.loaded)) {
           await this.session.unload();
+          this.printer.resetPopulatedStorageAddresses();
           this.printer.print("Transaction unloaded.");
           this.repl.setPrompt(DebugUtils.formatPrompt(this.network));
         } else {
@@ -644,7 +669,7 @@ class DebugInterpreter {
 
         if (this.session.view(session.status.loaded)) {
           if (this.session.view(trace.steps).length > 0) {
-            this.printer.printInstruction(temporaryPrintouts);
+            await this.printer.printInstruction(temporaryPrintouts);
             this.printer.printFile();
             this.printer.printState();
           } else {
@@ -673,7 +698,7 @@ class DebugInterpreter {
         break;
       case ";":
         if (!this.session.view(trace.finishedOrUnloaded)) {
-          this.printer.printInstruction();
+          await this.printer.printInstruction();
           this.printer.printFile();
           this.printer.printState();
         }
@@ -708,7 +733,7 @@ class DebugInterpreter {
       case "Y":
         if (!this.session.view(trace.finishedOrUnloaded)) {
           if (!this.session.view(sourcemapping.current.source).source) {
-            this.printer.printInstruction();
+            await this.printer.printInstruction();
           }
           this.printer.printFile();
           this.printer.printState();
@@ -726,9 +751,14 @@ class DebugInterpreter {
         }
         break;
       case "t":
+      case "z":
+      case "Z":
         if (!loadFailed) {
           this.printer.printAddressesAffected();
           this.printer.warnIfNoSteps();
+          if (storageRangeAtActivationFailed) {
+            this.printer.warnStorageRangeAtNotSupported();
+          }
           this.printer.printFile();
           this.printer.printState();
         } else if (this.session.view(session.status.isError)) {
@@ -760,6 +790,8 @@ class DebugInterpreter {
       cmd !== "-" &&
       cmd !== "t" &&
       cmd !== "T" &&
+      cmd !== "z" &&
+      cmd !== "Z" &&
       cmd !== "g" &&
       cmd !== "G" &&
       cmd !== "s" &&
