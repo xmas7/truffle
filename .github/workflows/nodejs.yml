@@ -48,15 +48,35 @@ jobs:
         node-version: ${{ matrix.node-version }}
 
     # fallback to npm6 for node 16
-    - name: fallback to npm 6 on node 16
+    - name: Fallback to npm 6 on node 16
       if: ${{ matrix.node-version == '16.x' }}
       run: npm -g install npm@6
 
     - run: npm install -g yarn
 
-    - run: yarn bootstrap
-    
-    - run: yarn depcheck
+    - name: Restore lerna
+      id: cache-lerna
+      uses: actions/cache@v2
+      with:
+        # recursively cache all node_modules/ folders
+        path: |
+          node_modules
+          */*/node_modules
+        # hash includes only the top level yarn.lock under source control
+        key: test-${{ runner.os }}-${{ matrix.node-version }}-${{ hashfiles('yarn.lock') }}
+
+    - name: Bootstrap
+      id: bootstrap
+      run: yarn bootstrap
+      if: steps.cache-lerna.outputs.cache-hit != 'true'
+
+    # build, transpile and create artifacts in dist/
+    - name: Build packages and webpack, from cache
+      run: $(yarn bin)/lerna run prepare --stream
+      if: steps.bootstrap.conclusion == 'skipped'
+
+    - name: Dependency Check
+      run: yarn depcheck
     
     - run: ${{ matrix.env }} yarn ci
       env:
