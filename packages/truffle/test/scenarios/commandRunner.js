@@ -2,31 +2,73 @@ const { exec } = require("child_process");
 const { EOL } = require("os");
 const path = require("path");
 
+//Log a helpful message to standout in CI log noise
+const Log = (msg, isErr) => {
+  const fmt = msg
+    .split("\n")
+    .map(
+      l =>
+        `\t---truffle commandRunner ${isErr ? "stderr" : "stdout"}--- |\t${l}`
+    )
+    .join("\n");
+  console.log(fmt);
+};
+
 module.exports = {
   getExecString: function () {
     return process.env.NO_BUILD
       ? `node ${path.join(__dirname, "../", "../", "../", "core", "cli.js")}`
       : `node ${path.join(__dirname, "../", "../", "build", "cli.bundled.js")}`;
   },
-  run: function (command, config) {
+
+  /**
+   * Run a truffle command as a child process and examine its output, via supplied
+   * `config.logger.log`
+   *
+   * @param {string[]} command - the truffle command to run.
+   * @param {TruffleConfig} config - Truffle config to be used for the test.
+   * @param {string} debugEnv - comma separate string to pass as DEBUG env to child process. This
+   *        string informs the node debug module which trace statements to execute. When set the
+   *        child process' stdout and stderr are logged and will be captured in the CI log when
+   *        run in CI, or in the terminal if run locally.
+   *
+   *        For example: "*,-develop*,-co*,-reselect*" will match all values, excluding those that
+   *        start with develop, co or reselect. See https://github.com/debug-js/debug#conventions
+   *
+   * @returns a Promise that resolves if the child process is successful, rejects otherwise.
+   */
+  run: function (command, config, debugEnv = "") {
     const execString = `${this.getExecString()} ${command}`;
+    const shouldLog = debugEnv.trim().length > 0;
+
+    shouldLog && Log("CommandRunner");
+    shouldLog && Log(`execString: ${execString}`);
 
     return new Promise((resolve, reject) => {
       let child = exec(execString, {
-        cwd: config.working_directory
+        cwd: config.working_directory,
+        env: {
+          ...process.env,
+          DEBUG: debugEnv
+        }
       });
 
       child.stdout.on("data", data => {
         data = data.toString().replace(/\n$/, "");
+        shouldLog && Log(data);
         config.logger.log(data);
       });
+
       child.stderr.on("data", data => {
         data = data.toString().replace(/\n$/, "");
+        shouldLog && Log(data, true);
         config.logger.log(data);
       });
+
       child.on("close", code => {
         // If the command didn't exit properly, show the output and throw.
         if (code !== 0) {
+          shouldLog && Log(`errorCode: ${code}`, true);
           reject(new Error("Unknown exit code: " + code));
         }
         resolve();
@@ -37,6 +79,7 @@ module.exports = {
       }
     });
   },
+
   /**
    * This is a function to test the output of a truffle develop/console command with arguments.
    * @param {string[]} inputCommands - An array of input commands to enter when the prompt is ready.
