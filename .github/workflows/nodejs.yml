@@ -16,20 +16,21 @@ jobs:
   yarncheck:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-      - run: npm install -g yarn
-      - run: yarn install --ignore-scripts --ignore-engines
-      - run: test -z "$(git diff)" || (echo 'Please run yarn and commit all changes to yarn.lock'; false)
-      - uses: 8398a7/action-slack@v3
-        with:
-          channel: '#truffle-ci-notifications'
-          status: ${{ job.status }}
-          fields: job,commit,author,pullRequest
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-        if: failure()
+      - run: echo "hi"
+      # - uses: actions/checkout@v2
+      # - uses: actions/setup-node@v2
+      # - run: npm install -g yarn
+      # - run: yarn install --ignore-scripts --ignore-engines
+      # - run: test -z "$(git diff)" || (echo 'Please run yarn and commit all changes to yarn.lock'; false)
+      # - uses: 8398a7/action-slack@v3
+      #   with:
+      #     channel: '#truffle-ci-notifications'
+      #     status: ${{ job.status }}
+      #     fields: job,commit,author,pullRequest
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #     SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      #   if: failure()
 
   build:
     needs: yarncheck
