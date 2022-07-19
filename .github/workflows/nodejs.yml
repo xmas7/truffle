@@ -39,8 +39,7 @@ jobs:
         platform: [ubuntu-latest]
         # node-version: [12.x, 14.x, 16.x]
         node-version: [16.x]
-        # env: [GETH=true, PACKAGES=true, INTEGRATION=true]
-        env: [PACKAGES=true]
+        env: [GETH=true, PACKAGES=true, INTEGRATION=true]
     runs-on: ${{ matrix.platform }}
 
     steps:
