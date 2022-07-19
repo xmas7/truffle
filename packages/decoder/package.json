@@ -21,7 +21,7 @@
     "build": "tsc",
     "prepare": "yarn build",
     "start": "tsc --watch",
-    "test": "mocha ./test/current/test/* ./test/legacy/test/*"
+    "test": "mocha --reporter json --reporter-option output=../mocha-decoder.json ./test/current/test/* ./test/legacy/test/*"
   },
   "types": "dist/index.d.ts",
   "dependencies": {

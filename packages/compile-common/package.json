@@ -16,7 +16,7 @@
   "scripts": {
     "build": "tsc",
     "prepare": "yarn build",
-    "test": "mocha -r ts-node/register test/*.ts",
+    "test": "mocha -r ts-node/register --reporter json --reporter-option output=../mocha-compile-common.json test/*.ts",
     "watch": "tsc -w"
   },
   "types": "dist/src/index.d.ts",

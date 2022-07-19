@@ -17,7 +17,7 @@
   "scripts": {
     "build": "tsc",
     "prepare": "yarn build",
-    "test": "mocha --exit -r ts-node/register test/**/*.test.ts"
+    "test": "mocha --exit -r ts-node/register --reporter json --reporter-option output=../mocha-code-utils.json test/**/*.test.ts"
   },
   "types": "./dist/src/index.d.ts",
   "dependencies": {

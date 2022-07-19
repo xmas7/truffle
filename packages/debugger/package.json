@@ -17,7 +17,7 @@
   "scripts": {
     "build": "webpack --config webpack/webpack.config.js",
     "prepare": "yarn build",
-    "test": "mochapack --webpack-config webpack/webpack.config-test.js \"./test/*.js\" \"./test/data/*.js\"",
+    "test": "mochapack --webpack-config webpack/webpack.config-test.js --reporter json --reporter-option output=../mocha-debugger.json \"./test/*.js\" \"./test/data/*.js\"",
     "test:coverage": "nyc mochapack --webpack-config webpack/webpack.config-test.js \"./test/*.js\" \"./test/data/*.js\"",
     "test:debug": "NODE_ENV=testing node --inspect ./node_modules/.bin/mochapack --webpack-config webpack/webpack.config-test.js \"./test/*.js\" \"./test/data/*.js\""
   },

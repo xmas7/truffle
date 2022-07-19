@@ -22,8 +22,8 @@
     "build": "tsc",
     "prepare": "yarn build",
     "test": "yarn test:ts && yarn test:js",
-    "test:js": "mocha test/*.js",
-    "test:ts": "mocha -r ts-node/register test/*.ts"
+    "test:js": "mocha --reporter json --reporter-option output=../mocha-resolver-js.json test/*.js",
+    "test:ts": "mocha --reporter json --reporter-option output=../mocha-resolver-ts.json -r ts-node/register test/*.ts"
   },
   "types": "dist/lib/index.d.ts",
   "dependencies": {

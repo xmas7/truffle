@@ -19,7 +19,7 @@
   "scripts": {
     "build": "tsc",
     "prepare": "yarn build",
-    "test": "mocha --exit -r ts-node/register test/**/*.test.ts",
+    "test": "mocha --reporter json --reporter-option output=../mocha-interface-adapter.json --exit -r ts-node/register test/**/*.test.ts",
     "watch": "tsc -w"
   },
   "types": "dist/index.d.ts",

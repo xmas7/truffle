@@ -37,8 +37,10 @@ jobs:
     strategy:
       matrix:
         platform: [ubuntu-latest]
-        node-version: [12.x, 14.x, 16.x]
-        env: [GETH=true, PACKAGES=true, INTEGRATION=true]
+        # node-version: [12.x, 14.x, 16.x]
+        node-version: [16.x]
+        # env: [GETH=true, PACKAGES=true, INTEGRATION=true]
+        env: [PACKAGES=true]
     runs-on: ${{ matrix.platform }}
 
     steps:
@@ -82,6 +84,15 @@ jobs:
     - run: ${{ matrix.env }} yarn ci
       env:
         CI: true
+
+    - name: Test Report
+      uses: dorny/test-reporter@v1
+      if: success() || failure()
+      with:
+        name: Mocha Tests
+        path: packages/mocha-*.json
+        reporter: mocha-json
+
     - uses: 8398a7/action-slack@v3
       with:
         channel: '#truffle-ci-notifications'

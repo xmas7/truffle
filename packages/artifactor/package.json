@@ -18,7 +18,7 @@
   "scripts": {
     "build": "tsc",
     "prepare": "yarn build",
-    "test": "mocha"
+    "test": "mocha --reporter json --reporter-option output=../mocha-artifactor.json"
   },
   "types": "dist/index.d.ts",
   "dependencies": {

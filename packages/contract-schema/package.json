@@ -20,7 +20,7 @@
   "scripts": {
     "build": "sh ./scripts/generate-declarations",
     "prepare": "yarn run build",
-    "test": "mocha"
+    "test": "mocha --reporter json --reporter-option output=../mocha-contract-schema.json"
   },
   "typings": "./typings/index.d.ts",
   "dependencies": {

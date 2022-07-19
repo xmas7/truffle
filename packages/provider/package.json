@@ -16,7 +16,7 @@
   "main": "index.js",
   "scripts": {
     "prepare": "exit 0",
-    "test": "mocha"
+    "test": "mocha --reporter json --reporter-option output=../mocha-provider.json"
   },
   "types": "./typings/index.d.ts",
   "dependencies": {

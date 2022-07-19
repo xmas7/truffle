@@ -23,7 +23,7 @@
     "clean": "rm -rf ./dist",
     "prepare": "yarn build",
     "test": "yarn test:types && yarn test:code",
-    "test:code": "mocha",
+    "test:code": "mocha --reporter json --reporter-option output=../mocha-expect.json",
     "test:types": "tsd"
   },
   "types": "dist/src/index.d.ts",

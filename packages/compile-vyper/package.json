@@ -16,7 +16,7 @@
   "main": "index.js",
   "scripts": {
     "prepare": "exit 0",
-    "test": "mocha"
+    "test": "mocha --reporter json --reporter-option output=../mocha-compile-vyper.json"
   },
   "dependencies": {
     "@truffle/compile-common": "^0.7.32",
