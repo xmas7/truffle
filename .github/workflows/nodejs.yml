@@ -37,8 +37,7 @@ jobs:
     strategy:
       matrix:
         platform: [ubuntu-latest]
-        # node-version: [12.x, 14.x, 16.x]
-        node-version: [16.x]
+        node-version: [12.x, 14.x, 16.x]
         env: [GETH=true, PACKAGES=true, INTEGRATION=true]
     runs-on: ${{ matrix.platform }}
 
@@ -88,7 +87,7 @@ jobs:
       uses: dorny/test-reporter@v1
       if: success() || failure()
       with:
-        name: Mocha Tests
+        name: Mocha ${{ matrix.node-version }} ${{ matrix.env }}
         path: packages/mocha-*.json
         reporter: mocha-json
 
